@@ -1,1 +1,75 @@
-xxxxxxx
+# content.py
+
+# This module develops content based on the outline.
+
+from agents import ResearcherAgent, WriterAgent, CriticAgent
+from style import get_style_prompt
+
+def develop_content(outline, subject, document_type, progress_bar):
+    """
+    Develops detailed content for each section in the outline.
+
+    Args:
+        outline (dict): The outline with section titles and descriptions.
+        subject (str): The research subject.
+        document_type (str): The type of document.
+        progress_bar (streamlit.progress): Progress bar to update progress.
+
+    Returns:
+        dict: A dictionary containing the detailed content for each section.
+    """
+    # Initialize agents.
+    researcher = ResearcherAgent()
+    writer = WriterAgent()
+    critic = CriticAgent()
+
+    # Get the style prompt.
+    style_prompt = get_style_prompt(document_type)
+
+    # Initialize content dictionary.
+    content_dict = {}
+
+    # Total number of sections to track progress.
+    total_sections = len(outline)
+    current_section = 0
+
+    # Iterate over each section in the outline.
+    for title, description in outline.items():
+        current_section += 1
+
+        # Initialize iteration count.
+        iteration = 0
+        max_iterations = 3  # Maximum number of iterations for refinement.
+
+        # Start with the initial content (description from the outline).
+        content = description
+
+        # Iteratively refine the content.
+        while iteration < max_iterations:
+            iteration += 1
+
+            # Researcher provides additional research if needed.
+            research_findings = researcher.research(f"{subject} - {title}")
+
+            # Writer writes the content for the section.
+            content_prompt = f"{style_prompt}\n\nUsing the following research findings, write a detailed section for '{title}'. Include any relevant visuals with descriptions enclosed in [visual][/visual] tags.\n\nResearch Findings:\n{research_findings}\n\nCurrent Content:\n{content}"
+            content = writer.write(content_prompt)
+
+            # Critic critiques the content.
+            critique = critic.critique(content)
+
+            # Check if the critique indicates the content is acceptable.
+            if "no significant issues" in critique.lower():
+                break  # Accept the content.
+            else:
+                # Writer refines the content based on the critique.
+                content = writer.write(f"Refine the following content based on the critique:\n\nContent:\n{content}\n\nCritique:\n{critique}\n\n{style_prompt}")
+
+        # Add the final content to the content dictionary.
+        content_dict[title] = content
+
+        # Update progress bar.
+        progress = int(20 + 60 * (current_section / total_sections))
+        progress_bar.progress(progress)
+
+    return content_dict
