@@ -1,9 +1,19 @@
 
+##AI Science Researcher
+An AI-powered application that generates comprehensive research papers based on user-provided topics.
 
+#Features
 
-Explanation:
+Outline Generation: Creates a detailed outline using recursive refinement.
+Content Generation: Generates content for each section with iterative improvements.
+Document Processing: Formats the document, processes figures and tables, and manages references.
+User Interface: Streamlit-based UI with progress tracking and interactive elements.
+Download Options: Provides the final document in MS Word format for download.
+Setup Instructions
 
-The above code provides a modular approach to generating a research paper using AI agents in Python, suitable for a beginner programmer. Each module has been designed with extensive comments to explain the purpose and logic of the functions and classes within.
+#Explanation:
+
+The above code provides a modular approach to generating a research paper using AI agents in Python, suitable for a beginner programmer. Each module has been designed with extensive comments to explain the purpose and logic of the functions and classes within:
 
 	•	settings.py: Handles configuration, including setting up API keys and endpoints, and provides a function to make API calls to the AI inference engine.
 	•	agents.py: Defines the base Agent class and specialized agents (ResearcherAgent, WriterAgent, CriticAgent) that interact with the AI model to perform research, writing, and critiquing tasks.
