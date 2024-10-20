@@ -29,3 +29,5 @@ Note: The AI API calls are simulated with placeholder responses since actual API
 Usage:
 
 	1.	Install the required libraries:
+pip install streamlit pillow python-docx
+sreamlit run main.py
