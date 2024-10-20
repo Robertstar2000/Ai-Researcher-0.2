@@ -1,1 +1,74 @@
-xxxxxx
+# outline.py
+
+# This module generates the document outline.
+
+from agents import ResearcherAgent, WriterAgent, CriticAgent
+from style import get_style_prompt
+
+def generate_outline(subject, document_type, max_iterations=3):
+    """
+    Generates an outline for the research paper.
+
+    Args:
+        subject (str): The research subject.
+        document_type (str): The type of document.
+        max_iterations (int): Maximum number of iterations for refinement.
+
+    Returns:
+        dict: A dictionary containing the outline with sections as keys and descriptions as values.
+    """
+    # Initialize agents.
+    researcher = ResearcherAgent()
+    writer = WriterAgent()
+    critic = CriticAgent()
+
+    # Get the style prompt based on the document type.
+    style_prompt = get_style_prompt(document_type)
+
+    # Initialize the outline dictionary.
+    outline = {}
+
+    # Step 1: Conduct initial research on the subject.
+    research_findings = researcher.research(subject)
+
+    # Step 2: Generate initial section titles using the WriterAgent.
+    initial_prompt = f"{style_prompt}\n\nBased on the research findings below, generate an outline with section titles for a research paper on '{subject}'.\n\nResearch Findings:\n{research_findings}"
+    section_titles = writer.write(initial_prompt)
+
+    # Assume section_titles is a string with section titles separated by newlines.
+    titles = section_titles.strip().split('\n')
+
+    # Step 3: Iterate over each title to refine descriptions.
+    for title in titles:
+        # Skip empty titles.
+        if not title.strip():
+            continue
+
+        # Initialize iteration count.
+        iteration = 0
+
+        # Start with an empty content.
+        content = ""
+
+        # Iteratively refine the section description.
+        while iteration < max_iterations:
+            iteration += 1
+
+            if not content:
+                # Writer writes a brief description for the section.
+                content = writer.write(f"Write a brief description for the section titled '{title}' in the context of '{subject}'.\n\n{style_prompt}")
+            else:
+                # Refine content based on critique.
+                content = writer.write(f"Refine the following description based on the critique:\n\nDescription:\n{content}\n\nCritique:\n{critique}\n\n{style_prompt}")
+
+            # Critic critiques the description.
+            critique = critic.critique(content)
+
+            # Check if the critique is acceptable or contains significant issues.
+            if "no significant issues" in critique.lower():
+                break  # Accept the content.
+
+        # Add the final content to the outline dictionary.
+        outline[title] = content
+
+    return outline
