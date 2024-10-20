@@ -1,1 +1,31 @@
-xxxxxx
+# style.py
+
+# This module defines prompt templates for different types of documents.
+
+def get_style_prompt(document_type):
+    """
+    Returns a style prompt based on the selected document type.
+
+    Args:
+        document_type (str): The type of document (e.g., 'General Research', 'Literature Review', 'Experimental Research').
+
+    Returns:
+        str: The style prompt.
+    """
+    if document_type == 'General Research':
+        return "Please write in a formal academic style suitable for a general research paper."
+    elif document_type == 'Literature Review':
+        return "Please write a comprehensive literature review, summarizing key findings from existing research."
+    elif document_type == 'Experimental Research':
+        return "Please write in the style of an experimental research paper, including methods, results, and analysis."
+    else:
+        return "Please write in a clear and formal academic style."
+
+def get_visual_style_prompt():
+    """
+    Returns a style prompt for visual generation.
+
+    Returns:
+        str: The visual style prompt.
+    """
+    return "Create a simple and clear visual representation suitable for inclusion in an academic research paper."
